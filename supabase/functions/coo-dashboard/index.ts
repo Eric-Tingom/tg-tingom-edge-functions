@@ -1,18 +1,15 @@
-// coo-dashboard v6 - FlowOps360 COO Command Center web dashboard
-// Multi-file function: index.ts, auth.ts, ops.ts, system.ts, primitives.ts, css_html.ts
-// Renders live operational intelligence: work items, email queue, agent health,
-//   client retainer status, HubSpot pipeline, integration status
-// Tables: work_items, email_monitoring_queue, agent_registry, client_registry,
-//         hubspot_companies_cache, hubspot_deals_cache, integration_health_log
-// RPCs: get_dashboard_summary, get_agent_health
-
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-
-// Full implementation in live Supabase Edge Function coo-dashboard v6
-// Source split across 6 modules; index.ts is the Deno.serve entrypoint
-
-Deno.serve(async (_req: Request) => {
-  return new Response(JSON.stringify({ error: "See live Edge Function for full implementation" }), {
-    status: 501, headers: { "Content-Type": "application/json" }
+import { CSS_HTML } from "./css_html.ts";
+import { JS_PRIMITIVES } from "./primitives.ts";
+import { JS_AUTH } from "./auth.ts";
+import { JS_OPS } from "./ops.ts";
+import { JS_SYS } from "./system.ts";
+const HTML = CSS_HTML + '<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>\n' + '<script>\n' + JS_PRIMITIVES + '\n</script>\n' + '<script>\n' + JS_AUTH + '\n</script>\n' + '<script>\n' + JS_OPS + '\n</script>\n' + '<script>\n' + JS_SYS + '\n</script>\n' + '</body>\n</html>';
+Deno.serve((_req)=>{
+  return new Response(HTML, {
+    headers: {
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "no-cache, no-store, must-revalidate"
+    }
   });
 });
